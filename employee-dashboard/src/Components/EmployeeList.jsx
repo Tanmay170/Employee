@@ -31,7 +31,7 @@ const EmployeeList = ({ employees }) => {
 
   if (!employeeArray || employeeArray.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
         <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-4xl">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">No Data Available</h2>
@@ -49,7 +49,7 @@ const EmployeeList = ({ employees }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
+    <div className="min-h-screen bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
       <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
@@ -112,7 +112,7 @@ const EmployeeList = ({ employees }) => {
 
         {/* Employee Grid */}
         {filteredEmployees.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[600px] overflow-y-auto p-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-150 overflow-y-auto p-2">
             {filteredEmployees.map((employee) => (
               <div
                 key={employee.employee_id || Math.random()}
