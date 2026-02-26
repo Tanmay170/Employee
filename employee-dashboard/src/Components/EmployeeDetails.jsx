@@ -2,11 +2,20 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiCamera, FiArrowLeft, FiMail, FiPhone, FiMapPin, FiBriefcase, FiDollarSign } from 'react-icons/fi';
 
-const EmployeeDetails = ({ employees }) => {
+const EmployeeDetails = ({ employees, loading }) => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const employee = employees.find(emp => emp.employee_id === parseInt(id));
+  const employee = (employees || []).find(emp => String(emp.employee_id) === String(id));
+
+  if (loading) {
+    return (
+      <div className="card text-center">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Loading Employee Details</h2>
+        <p className="text-gray-600">Fetching latest employee record from server.</p>
+      </div>
+    );
+  }
 
   if (!employee) {
     return (

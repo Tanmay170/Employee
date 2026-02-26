@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { fetchEmployees } from '../services/employeeApi';
 
-const Login = ({ setIsAuthenticated, setEmployees }) => {
+const Login = ({ setIsAuthenticated, setEmployees, setEmployeesError }) => {
   const [credentials, setCredentials] = useState({
     username: '',
     password: ''
@@ -25,57 +25,18 @@ const Login = ({ setIsAuthenticated, setEmployees }) => {
     if (credentials.username === 'testuser' && credentials.password === 'Test123') {
       try {
         setLoading(true);
-        
-        const apiUrl = 'https://backend.jotish.in/backend_dev/gettabledata.php';
-        
-        const response = await axios.post(
-          apiUrl,
-          {
-            username: 'test',
-            password: '123456'
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-        
-        console.log('API Response:', response.data);
-        
-        // Check the actual structure of the response
-        if (response.data) {
-          // Try to extract employee data - adjust this based on actual API response
-          let employeeData = [];
-          
-          if (Array.isArray(response.data)) {
-            employeeData = response.data;
-          } else if (response.data.data && Array.isArray(response.data.data)) {
-            employeeData = response.data.data;
-          } else if (response.data.employees && Array.isArray(response.data.employees)) {
-            employeeData = response.data.employees;
-          } else if (response.data.results && Array.isArray(response.data.results)) {
-            employeeData = response.data.results;
-          } else if (typeof response.data === 'object') {
-            // If it's a single object, wrap it in an array
-            employeeData = [response.data];
-          }
-          
-          if (employeeData.length > 0) {
-            setEmployees(employeeData);
-            setIsAuthenticated(true);
-            localStorage.setItem('isAuthenticated', 'true');
-            navigate('/employees');
-          } else {
-            setError('No employee data found in response');
-            console.log('Response structure:', response.data);
-          }
-        } else {
-          setError('Empty response from server');
-        }
+
+        const employeeData = await fetchEmployees();
+
+        setEmployees(employeeData);
+        setEmployeesError('');
+        setIsAuthenticated(true);
+        localStorage.setItem('isAuthenticated', 'true');
+        navigate('/employees');
       } catch (err) {
         console.error('API Error:', err);
         setError('Failed to fetch employee data. Please try again.');
+        setEmployeesError('Failed to fetch employee data. Please try again.');
       } finally {
         setLoading(false);
       }

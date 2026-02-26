@@ -21,10 +21,32 @@ ChartJS.register(
   Legend
 );
 
-const SalaryChart = ({ employees }) => {
+const SalaryChart = ({ employees, loading }) => {
   const navigate = useNavigate();
+  const employeeArray = Array.isArray(employees) ? employees : [];
 
-  const topEmployees = employees.slice(0, 10);
+  const topEmployees = employeeArray.slice(0, 10);
+
+  if (loading) {
+    return (
+      <div className="card w-full max-w-5xl text-center">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Loading Salary Analysis</h2>
+        <p className="text-gray-600">Please wait while we fetch employee salaries.</p>
+      </div>
+    );
+  }
+
+  if (topEmployees.length === 0) {
+    return (
+      <div className="card w-full max-w-5xl text-center">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">No Salary Data Available</h2>
+        <p className="text-gray-600 mb-6">Employee salary data is unavailable right now.</p>
+        <button onClick={() => navigate('/employees')} className="btn-secondary flex items-center gap-2 mx-auto">
+          <FiArrowLeft /> Back to List
+        </button>
+      </div>
+    );
+  }
 
   const chartData = {
     labels: topEmployees.map(emp => emp.employee_name?.split(' ')[0] || 'N/A'),

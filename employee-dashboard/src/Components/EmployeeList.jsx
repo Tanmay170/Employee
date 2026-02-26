@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
-const EmployeeList = ({ employees }) => {
+const EmployeeList = ({ employees, loading, error, onRetry }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
@@ -12,6 +12,42 @@ const EmployeeList = ({ employees }) => {
 
   // Ensure employees is an array
   const employeeArray = Array.isArray(employees) ? employees : [];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-4xl text-center">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Loading Employee Data</h2>
+          <p className="text-gray-600">Please wait while we fetch records from the server.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-4xl text-center">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Unable to Load Data</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={onRetry}
+              className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"
+            >
+              Retry
+            </button>
+            <button
+              onClick={handleLogout}
+              className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600"
+            >
+              Back to Login
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
   
   const filteredEmployees = employeeArray.filter(emp => 
     emp.employee_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
